@@ -1,0 +1,231 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 8-May-2019, 1:01:22 PM
+    Author     : trains
+*/
+
+#first-fraction, #first-fraction input, #first-aux-fraction, #first-aux-fraction input, .operation-sign, .noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+
+.wrap-div {
+    margin: 5px 0;
+}
+
+.operation-sign {
+    font-size: 46px;
+    position: relative;
+    top: 0.25em;
+    font-family: serif;
+    font-weight: bold;
+}
+body {
+    background-color: rgba(242, 235, 164, 1);
+    text-align: center;
+    
+}
+
+body {
+}
+
+#calcman {
+    width: 100%;
+    height: 100%;
+    min-width: 100%;
+    max-width: 100%;
+    min-height: 100%;
+    max-height: 100%;
+    z-index: 0;
+    position: relative;
+    opacity: 0.05;
+    background-image: url("Calcman.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center center;
+}
+
+#centerer {
+    z-index: 1;
+    position: relative;
+}
+
+.fraction-input-width {
+    font-size: 24px;
+}
+.fraction-input-width {
+    width: 1.7em;
+}
+
+.fraction-maker-no-buttons {
+    width: auto;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    max-height: 100%;
+    margin: 0;
+}
+.fraction-maker-no-buttons {
+    max-height: 200px;
+    text-align: center;
+    display: inline-block;
+    font-size: 0px;
+    vertical-align: middle;
+    margin: 0 4px;
+}
+
+.fraction-part, .fraction-part-container {
+    max-width: 100%;
+    max-height: 100%;
+    text-align: center;
+    font-weight: bold;
+    font-size: inherit;
+    vertical-align: middle;
+    line-height: 1em;
+}
+.fraction-part-container-no-buttons {
+    display: inline-flex;
+    display: -webkit-inline-flex;
+    justify-content: center;
+    -webkit-justify-content: center;
+}
+
+
+.fraction-part {
+    display: inline-block;
+    background-color: rgba(242, 235, 164, 1);
+}
+
+#chooser {
+    font-size: 20px;
+    display: inline-block;
+    text-align: left;
+}
+#centerer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    max-height: 90vh;
+    width: 100%;
+    display: inline-block;
+}
+
+
+/*
+@media screen and (min-height: 260px) {
+    #centerer {
+        top: 50%;
+        -webkit-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+    }
+} */
+
+.button-image {
+    max-height: 100%;
+    max-width: 25%;
+    vertical-align: middle;
+}
+
+button:disabled .button-image {
+    filter: grayscale(1);
+    -webkit-filter: grayscale(1);
+}
+
+.my-button {
+    height: 30px;
+    width: 100px;
+}
+.fraction-line {
+    height: 0.1em;
+    width: 0.7em;
+    margin: 0;
+    display: inline-block;
+    background-color: black;
+}
+
+.ordered-fraction {
+    margin-top: 20px;
+    margin-right: 40px;
+    position: relative;
+}
+
+.ordered-fraction select {
+    position: absolute;
+    top: -20px;
+    right: -40px;
+    border: 2px white solid;
+    border-radius: 2px;
+    font-size: 16px;
+    width: 40px;
+    height: 20px;
+}
+
+.fraction-part-readonly {
+    border: none;
+}
+
+.ui-spinner-input {
+    margin: 0;
+    max-width: 100%;
+    max-height: 100%;
+    padding: 0;
+}
+.ui-spinner {
+    font-size: 60px;
+    max-width: 100%;
+    max-height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.ui-spinner-button {
+    width: 30px;
+}
+
+.ui-spinner-up {
+    background-color: green;
+}
+
+.ui-spinner-down {
+    background-color: red;
+}
+
+.ui-icon-triangle-1-n, .ui-icon-triangle-1-s {
+    font-size: 20px;
+}
+
+.fraction-buttons {
+    width: 46px;
+    height: 80px;
+    display: inline-block;
+    font-size: 0px;
+}
+
+.fraction-up-button, .fraction-down-button {
+    width: 46px;
+    height: 46px;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+}
+
+.fraction-up-button {
+    background-color: rgb(63, 127, 0);
+}
+.fraction-down-button {
+    background-color: red;
+}
