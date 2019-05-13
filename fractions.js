@@ -308,8 +308,10 @@ $(window).load(function() {
         var m = parseInt($("#second-mixed-part").fractionNumerator().val());
         var n = parseInt($("#second-fraction").fractionNumerator().val());
         var d = parseInt($("#second-fraction").fractionDenominator().val());
-        if(n === undefined || isNaN(n) || d === undefined || isNaN(d))
-            return;
+        if(n === undefined || isNaN(n))
+            n = 0;
+        if(d === undefined || isNaN(d))
+            d = 1;
         if(isNaN(m) || m === undefined)
             m = 0;
         $("#check-button").attr("disabled", true);
