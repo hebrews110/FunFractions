@@ -266,6 +266,8 @@ $(window).load(function() {
     $("#select-mode").click(function() {
         var $selected = $("input[name=size]:checked");
         var op = parseInt($selected.val());
+        if(isNaN(op) || op === undefined)
+            return;
         if(op === MATH_ORDER) {
             $("#order-div").show();
             $("#general-div").hide();
