@@ -35,10 +35,10 @@ var operationHtml = [
 var operationInstructions = [
     "Choose the correct ordinal number for each fraction, from smallest to greatest.",
     "Reduce as much as possible.",
-    "Add the two fractions.",
-    "Subtract the two fractions.",
-    "Multiply the two fractions together.",
-    "Divide the two fractions."
+    "Add the two fractions. Reduce if possible.",
+    "Subtract the two fractions. Reduce if possible.",
+    "Multiply the two fractions together. Reduce if possible.",
+    "Divide the two fractions. Reduce if possible."
 ];
 
 $.fn.fractionNumerator = function() {
@@ -53,6 +53,8 @@ $.fn.fractionReadOnly = function(setOn) {
     var $parts = this.find(".fraction-part");
     if(setOn === undefined)
         setOn = true;
+    var mixed = "#" + this.attr("id").match(/[^-]*/).join('') + '-mixed-part';
+    $parts = $parts.add($(mixed).find(".fraction-part"));
     $parts.attr("readonly", setOn);
     if(setOn)
         $parts.addClass("fraction-part-readonly");
@@ -85,6 +87,15 @@ function vmax(v) {
   return Math.max(vh(v), vw(v));
 }
 
+$(window).resize(function() {
+    var fontScale = vmax(10);
+    if(fontScale > 60)
+        fontScale = 60;
+    $(".operation-sign").css({ "font-size": fontScale });
+    $("#centerer").css({ "font-size": fontScale / 2 });
+    $(".fraction-input-width").not(".fraction-maker-no-buttons").css({ "font-size": fontScale / 2 });
+    $(".ordered-fraction select").css({ "font-size": fontScale / 3 });
+});
 
 function isPrime(num) {
     for(var i = 2, s = Math.sqrt(num); i <= s; i++)
@@ -103,7 +114,7 @@ function getRandomNonPrime(min, max) {
 function fractionVal(array) {
     console.log(array[0]);
     console.log(array[1]);
-    return (array[0] / array[1]);
+    return (array[0] / array[1]) + array[2];
 }
 
 function valExists(val, maxIndex) {
@@ -116,9 +127,9 @@ function valExists(val, maxIndex) {
 
 function updateFractions() {
     if(isMixedMode)
-        $("#mixed-part").show();
+        $(".mixed-part").show();
     else
-        $("#mixed-part").hide();
+        $(".mixed-part").hide();
     
     orderFractions = [
         [ 0, 0 ],
@@ -141,16 +152,22 @@ function updateFractions() {
             $frac.fractionDenominator().val(orderFractions[i][1]);
         }
         orderFractionVals.sort();
-         console.log(orderFractionVals);
+        console.log(orderFractionVals);
         
     }
     else if(mathOperation !== MATH_REDUCE) {
         firstFraction[1] = getRandomNonPrime(3, 16);
         firstFraction[0] = getRandomInt(1, firstFraction[1] - 1);
+        if(isMixedMode && mathOperation !== MATH_DIVIDE)
+            firstFraction[2] = getRandomInt(0, 4);
+        else
+            firstFraction[2] = 0;
+         if(firstFraction[2] === 0)
+            $("#first-mixed-part").hide();
         $("#aux-parts").show();
         $("#operation").html(operationHtml[mathOperation]);
         if(sameDenominators)
-           secondFraction[1] = firstFraction[1];
+            secondFraction[1] = firstFraction[1];
         else
             secondFraction[1] = getRandomNonPrime(3, 16);
         if(mathOperation === MATH_MINUS) {
@@ -160,13 +177,24 @@ function updateFractions() {
         else {
             secondFraction[0] = getRandomInt(1, secondFraction[1] - 1);
         }
+        if(isMixedMode && mathOperation !== MATH_DIVIDE)
+            secondFraction[2] = getRandomInt(0, 4);
+        else
+            secondFraction[2] = 0;
+        if(secondFraction[2] === 0)
+            $("#first-aux-mixed-part").hide();
+        $("#first-aux-mixed-part").fractionNumerator().val(secondFraction[2]);
         $("#first-aux-fraction").fractionNumerator().val(secondFraction[0]);
         $("#first-aux-fraction").fractionDenominator().val(secondFraction[1]);
         
     } else {
         $("#aux-parts").hide();
-        firstFraction[1] = getRandomNonPrime(4, 32);
+        firstFraction[1] = getRandomInt(1, 6);
         firstFraction[0] = getRandomInt(1, firstFraction[1] - 1);
+        
+        var scalar = getRandomInt(2, 6);
+        firstFraction[0] *= scalar;
+        firstFraction[1] *= scalar;
     }
    
     
@@ -175,12 +203,16 @@ function updateFractions() {
 
         $("#first-fraction").fractionNumerator().val(firstFraction[0]);
         $("#first-fraction").fractionDenominator().val(firstFraction[1]);
+        
+        $("#first-mixed-part").fractionNumerator().css({ color: '' });
+        $("#first-mixed-part").fractionNumerator().val(firstFraction[2]);
+        
+        $("#second-mixed-part").fractionNumerator().css({ color: '' });
+        $("#second-mixed-part").fractionNumerator().val("");
         $("#second-fraction").fractionNumerator().css({ color: '' });
         $("#second-fraction").fractionNumerator().val("");
         $("#second-fraction").fractionDenominator().css({ color: '' });
         $("#second-fraction").fractionDenominator().val("");
-
-        $("#mixed-part").fractionNumerator().val("");
     }
     $("#the-instructions").css({ color: '' });
     $("#the-instructions").text(operationInstructions[mathOperation+2]);
@@ -205,6 +237,18 @@ function selectMathOperation(num) {
     }
 }
 
+// from https://codereview.stackexchange.com/a/20868
+// Improper fraction to mixed number
+// n = numerator
+// d = denominator
+// i = number
+function improperFractionToMixedNumber(n, d) {
+    i = parseInt(n / d);
+    n -= i * d;
+    return [i, reduce(n,d)];   
+}
+
+
 $(window).load(function() {
     $("#application").hide();
     $('input[type=radio]').change(function() {
@@ -215,7 +259,9 @@ $(window).load(function() {
         else
             $("#options").show();
         if(op >= MATH_TIMES)
-            $("#options").hide();
+            $("#same-denom").hide();
+        else
+            $("#same-denom").show();
     });
     $("#select-mode").click(function() {
         var $selected = $("input[name=size]:checked");
@@ -258,15 +304,17 @@ $(window).load(function() {
     $("#check-button").click(function() {
         
         var isCorrect = false;
-        var correctNumerator, correctDenominator;
-        var m = parseInt($("#mixed-part").fractionNumerator().val());
+        var correctNumerator, correctDenominator, correctMixedVal;
+        var m = parseInt($("#second-mixed-part").fractionNumerator().val());
         var n = parseInt($("#second-fraction").fractionNumerator().val());
         var d = parseInt($("#second-fraction").fractionDenominator().val());
         if(n === undefined || isNaN(n) || d === undefined || isNaN(d))
             return;
+        if(isNaN(m) || m === undefined)
+            m = 0;
         $("#check-button").attr("disabled", true);
         $("#next-button").attr("disabled", false);
-        var result = (n / d);
+        var result = m + (n / d);
         var expectedResult;
         if(mathOperation === MATH_ORDER) {
             var myVals = [];
@@ -314,15 +362,37 @@ $(window).load(function() {
                     throw "Undefined math operation";
             }
             var f = new Fraction(expectedResult);
-            correctNumerator = f.n;
-            correctDenominator = f.d;
-            console.log("expected " + expectedResult + " result " + result);
-            if(expectedResult.toFixed(5) === result.toFixed(5))
+            correctNumerator = parseFloat(f.n);
+            correctDenominator = parseFloat(f.d);
+            correctNumerator *= f.s;
+            /* Split into mixed val */
+            console.log("Before mixed mode");
+            console.log("Expected decimal: " + expectedResult);
+            console.log("Improper n: " + correctNumerator);
+            console.log("Improper d: " + correctDenominator);
+            if(isMixedMode) {
+                var res = improperFractionToMixedNumber(correctNumerator, correctDenominator);
+                console.log("RES: " + res);
+                correctMixedVal = res[0];
+                correctNumerator = res[1][0];
+                correctDenominator = res[1][1];
+            } else {
+                console.log("Not mixed mode");
+                correctMixedVal = 0;
+            }
+            console.log("Correct n: " + correctNumerator + " input: " + n);
+            console.log("Correct d: " + correctDenominator + " input: " + d);
+            console.log("Correct m: " + correctMixedVal + " input: " + m);
+            
+            if(n === correctNumerator && d === correctDenominator && m === correctMixedVal)
                 isCorrect = true;
         } else {
             var reduced = reduce(firstFraction[0], firstFraction[1]);
+            
             correctNumerator = reduced[0];
             correctDenominator = reduced[1];
+            corrextMixedVal = 0;
+            
             console.log("Expected " + reduced[0] + "/" + reduced[1]);
             if(n === reduced[0] && d === reduced[1]) {
                 console.log("Correct");
@@ -332,10 +402,11 @@ $(window).load(function() {
         numAnswered++;
         var $n = $("#second-fraction").fractionNumerator();
         var $d = $("#second-fraction").fractionDenominator();
+        var $m = $("#second-mixed-part").fractionNumerator();
         if(isCorrect) {
             numCorrect++;
             if(mathOperation !== MATH_ORDER) {
-                $n.add($d).css({ color: 'green' });
+                $n.add($d).add($m).css({ color: 'green' });
                 $("#second-fraction").fractionReadOnly(true);
             } else {
                 $("#the-instructions").css({ color: 'green' });
@@ -344,9 +415,10 @@ $(window).load(function() {
         } else {
             $("#second-fraction").fractionReadOnly(true);
             if(mathOperation !== MATH_ORDER) {
-                $n.add($d).css({ color: 'red' });
+                $n.add($d).add($m).css({ color: 'red' });
                 $n.val(correctNumerator);
                 $d.val(correctDenominator);
+                $m.val(correctMixedVal);
             } else {
                 $("#the-instructions").css({ color: 'red' });
                 $("#the-instructions").text("Nope, that's incorrect.");

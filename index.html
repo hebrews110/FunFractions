@@ -24,6 +24,7 @@ and open the template in the editor.
     <body>
         <div id='calcman' class='noselect'></div>
         <div id="centerer">
+        <div style="height: 4vmin;"></div>
         <div id="selector">
             <div id="chooser">
                 <b>Choose the type of game you want to play.</b>
@@ -43,7 +44,7 @@ and open the template in the editor.
                 <div id="options" style="display: none;">
                     Options:
                     <br>
-                    <label style='display: none;'><input id="mixed-fractions" type="checkbox" name="mixed-fractions"/> Mixed Fractions?</label>
+                    <label><input id="mixed-fractions" type="checkbox" name="mixed-fractions"/> Mixed Fractions?</label>
                     <br>
                     <label id="same-denom"><input type="checkbox" name="same-denom"/> Same Denominator?</label>
                     <p>
@@ -52,10 +53,16 @@ and open the template in the editor.
             </div>
         </div>
         <div id="application">
+            <p>
             <span id="the-instructions">Enter the simplified version of this fraction in the box on the right.</span>
             <p>
             <div id="general-div">    
                 <div class="wrap-div" style="display: inline-block;">
+                    <div class="fraction-maker-no-buttons fraction-input-width mixed-part" id="first-mixed-part">
+                        <div class="fraction-part-container-no-buttons fraction-input-width">
+                            <input readonly autocomplete="off" pattern="[0-9]{1,5}" type="text" value="1" class="fraction-part fraction-part-readonly fraction-numerator"/>
+                        </div>
+                    </div>
                     <div class="fraction-maker-no-buttons fraction-input-width" id="first-fraction">
                         <div class="fraction-part-container-no-buttons fraction-input-width">
                             <input readonly autocomplete="off" pattern="[0-9]{1,5}" type="text" value="1" class="fraction-part fraction-part-readonly fraction-numerator"/>
@@ -69,6 +76,11 @@ and open the template in the editor.
                     </div>
                     <div id="aux-parts" style="display: inline-block;">
                         <span class="operation-sign" id="operation">&times;</span>
+                        <div class="fraction-maker-no-buttons fraction-input-width mixed-part" id="first-aux-mixed-part">
+                            <div class="fraction-part-container-no-buttons fraction-input-width">
+                                <input readonly autocomplete="off" pattern="[0-9]{1,5}" type="text" value="1" class="fraction-part fraction-part-readonly fraction-numerator"/>
+                            </div>
+                        </div>
                         <div class="fraction-maker-no-buttons fraction-input-width" id="first-aux-fraction">
                             <div class="fraction-part-container-no-buttons fraction-input-width">
                                 <input readonly autocomplete="off" pattern="[0-9]{1,5}" type="text" value="1" class="fraction-part fraction-part-readonly fraction-numerator"/>
@@ -84,7 +96,7 @@ and open the template in the editor.
                 </div>
                 <div class="wrap-div" style="display: inline-block;">
                     <span class="operation-sign">=</span>
-                    <div class="fraction-maker-no-buttons fraction-input-width" id="mixed-part">
+                    <div class="fraction-maker-no-buttons fraction-input-width mixed-part" id="second-mixed-part">
                         <div class="fraction-part-container-no-buttons fraction-input-width">
                             <input autocomplete="off" pattern="[0-9]{1,5}" type="text" value="1" class="fraction-part fraction-numerator"/>
                         </div>

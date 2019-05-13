@@ -63,7 +63,7 @@ body {
     font-size: 24px;
 }
 .fraction-input-width {
-    width: 1.7em;
+    width: 1.9em;
 }
 
 .fraction-maker-no-buttons {
@@ -109,7 +109,6 @@ html, body {
 }
 
 #chooser {
-    font-size: 20px;
     display: inline-block;
     text-align: left;
 }
@@ -170,8 +169,10 @@ button:disabled .button-image {
     border: 2px white solid;
     border-radius: 2px;
     font-size: 16px;
-    width: 40px;
-    height: 20px;
+    min-width: 40px;
+    width: 2em;
+    height: 1.5em;
+    min-height: 20px;
 }
 
 .fraction-part-readonly {
