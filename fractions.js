@@ -162,7 +162,7 @@ function updateFractions() {
             firstFraction[2] = getRandomInt(0, 4);
         else
             firstFraction[2] = 0;
-         if(firstFraction[2] === 0)
+        if(firstFraction[2] === 0)
             $("#first-mixed-part").hide();
         $("#aux-parts").show();
         $("#operation").html(operationHtml[mathOperation]);
@@ -237,6 +237,13 @@ function selectMathOperation(num) {
     }
 }
 
+function safeSign(num) {
+    var sign = Math.sign(num);
+    if(sign == 0)
+        return 1;
+    return sign;
+}
+
 // from https://codereview.stackexchange.com/a/20868
 // Improper fraction to mixed number
 // n = numerator
@@ -245,7 +252,13 @@ function selectMathOperation(num) {
 function improperFractionToMixedNumber(n, d) {
     i = parseInt(n / d);
     n -= i * d;
-    return [i, reduce(n,d)];   
+    var base = [i, reduce(n,d)];
+    /* Remove duplicate negatives */
+    base[0] *= safeSign(base[1][0]);
+    base[1][0] = Math.abs(base[1][0]);
+    base[0] *= safeSign(base[1][1]);
+    base[1][1] = Math.abs(base[1][1]);
+    return base;
 }
 
 
@@ -303,6 +316,9 @@ $(window).load(function() {
         
         updateFractions();
     });
+    function isBlank(val) {
+        return isNaN(val) || val == undefined;
+    }
     $("#check-button").click(function() {
         
         var isCorrect = false;
@@ -310,11 +326,14 @@ $(window).load(function() {
         var m = parseInt($("#second-mixed-part").fractionNumerator().val());
         var n = parseInt($("#second-fraction").fractionNumerator().val());
         var d = parseInt($("#second-fraction").fractionDenominator().val());
-        if(n === undefined || isNaN(n))
+        if(isBlank(n) && isBlank(m) && isBlank(d)) {
+            return;
+        }
+        if(isBlank(n))
             n = 0;
-        if(d === undefined || isNaN(d))
+        if(isBlank(d))
             d = 1;
-        if(isNaN(m) || m === undefined)
+        if(isBlank(m))
             m = 0;
         $("#check-button").attr("disabled", true);
         $("#next-button").attr("disabled", false);
