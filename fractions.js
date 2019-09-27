@@ -249,15 +249,17 @@ function safeSign(num) {
 // n = numerator
 // d = denominator
 // i = number
-function improperFractionToMixedNumber(n, d) {
+function improperFractionToMixedNumber(org_n, org_d) {
+    /* Calculate an unsigned result */
+    var n = Math.abs(org_n);
+    var d = Math.abs(org_d);
     i = parseInt(n / d);
     n -= i * d;
     var base = [i, reduce(n,d)];
-    /* Remove duplicate negatives */
-    base[0] *= safeSign(base[1][0]);
-    base[1][0] = Math.abs(base[1][0]);
-    base[0] *= safeSign(base[1][1]);
-    base[1][1] = Math.abs(base[1][1]);
+    /* Apply negative signs if necessary */
+    var realSign = safeSign(org_n) * safeSign(org_d);
+    if(realSign < 0)
+        base[0] = -base[0];
     return base;
 }
 
