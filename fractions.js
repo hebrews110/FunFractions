@@ -124,8 +124,9 @@ function valExists(val, maxIndex) {
     }
     return false;
 }
-
+var tries = 0;
 function updateFractions() {
+    tries = 0;
     if(isMixedMode)
         $(".mixed-part").show();
     else
@@ -349,8 +350,10 @@ $(window).load(function() {
             d = 1;
         if(isBlank(m))
             m = 0;
-        $("#check-button").attr("disabled", true);
-        $("#next-button").attr("disabled", false);
+        if(mathOperation !== MATH_ORDER || tries >= 3) {
+            $("#check-button").attr("disabled", true);
+            $("#next-button").attr("disabled", false);
+        }
         var result = m + (n / d);
         var expectedResult;
         if(mathOperation === MATH_ORDER) {
@@ -436,11 +439,12 @@ $(window).load(function() {
                 isCorrect = true;
             }
         }
-        numAnswered++;
+        if(mathOperation !== MATH_ORDER || tries >= 3)
+            numAnswered++;
         var $n = $("#second-fraction").fractionNumerator();
         var $d = $("#second-fraction").fractionDenominator();
         var $m = $("#second-mixed-part").fractionNumerator();
-        if(mathOperation === MATH_ORDER)
+        if(mathOperation === MATH_ORDER && tries >= 3)
             $(".ordered-fraction").find("select").prop("disabled", true);
         if(isCorrect) {
             numCorrect++;
@@ -452,6 +456,7 @@ $(window).load(function() {
                 $("#the-instructions").text("Nice work!");
             }
         } else {
+            tries++;
             $("#second-fraction").fractionReadOnly(true);
             if(mathOperation !== MATH_ORDER) {
                 $n.add($d).add($m).css({ color: 'red' });
@@ -460,17 +465,21 @@ $(window).load(function() {
                 $m.val(correctMixedVal);
             } else {
                 $("#the-instructions").css({ color: 'red' });
-                $("#the-instructions").text("No, here's the correct order.");
-                $(".ordered-fraction").each(function(__unused, el) {
-                    var n = parseInt($(el).fractionNumerator().val());
-                    var d = parseInt($(el).fractionDenominator().val());
-                    var index = orderFractionVals.indexOf(n / d);
-                    if(index == -1)
-                        throw new Error("Fraction does not exist??");
-                    else
-                        $(el).find("select").val(index + 1);
-                    $("#order-div").insertAt(index, el);
-                });
+                if(tries <= 3) {
+                    $("#the-instructions").text("No, try again.");
+                } else {
+                    $("#the-instructions").text("No, here's the correct order.");
+                    $(".ordered-fraction").each(function(__unused, el) {
+                        var n = parseInt($(el).fractionNumerator().val());
+                        var d = parseInt($(el).fractionDenominator().val());
+                        var index = orderFractionVals.indexOf(n / d);
+                        if(index == -1)
+                            throw new Error("Fraction does not exist??");
+                        else
+                            $(el).find("select").val(index + 1);
+                        $("#order-div").insertAt(index, el);
+                    });
+                }
             }
         }
         if(numCorrect === 10)
