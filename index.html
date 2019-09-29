@@ -3,192 +3,224 @@
 1
 -->
 <html>
-    <head>
-        <title>Fun Fractions</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-        <script src="jquery.ui.touch-punch.min.js"></script>
-        
-        <script src="//cdn.jsdelivr.net/npm/phaser@3.16.2/dist/phaser.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
-        <script src="jquery.alterclass.js"></script>
-        <script src="fraction.min.js"></script>
-        <link rel="stylesheet" href="fractions.css">
-        <script src="fractions.js"></script>
-    </head>
-    <body>
-        <div id='calcman' class='noselect'></div>
-        <div id="centerer">
+
+<head>
+    <title>Fun Fractions</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="jquery.ui.touch-punch.min.js"></script>
+
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.16.2/dist/phaser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
+    <script src="jquery.alterclass.js"></script>
+    <script src="fraction.min.js"></script>
+    <link rel="stylesheet" href="fractions.css">
+    <script src="fractions.js"></script>
+</head>
+
+<body>
+    <div id='calcman' class='noselect'></div>
+    <div id="centerer">
         <div style="height: 4vmin;"></div>
         <div id="selector">
             <div id="chooser">
                 <b>Choose the type of game you want to play.</b>
                 <p>
-                <label><input type="radio" name="size" value="-2"/> Order Fractions</label>
-                <br>
-                <label><input type="radio" name="size" value="-1" /> Reduce Fractions</label>
-                <br>
-                <label><input type="radio" name="size" value="0" /> Add Fractions</label>
-                <br>
-                <label><input type="radio" name="size" value="1" /> Subtract Fractions</label>
-                <br>
-                <label><input type="radio" name="size" value="2" /> Multiply Fractions</label>
-                <br>
-                <label><input type="radio" name="size" value="3" /> Divide Fractions</label>
-                <p>
-                <div id="options" style="display: none;">
-                    Options:
+                    <label><input type="radio" name="size" value="-2" /> Order Fractions</label>
                     <br>
-                    <label><input id="mixed-fractions" type="checkbox" name="mixed-fractions"/> Mixed Fractions?</label>
+                    <label><input type="radio" name="size" value="-1" /> Reduce Fractions</label>
                     <br>
-                    <label id="same-denom"><input type="checkbox" name="same-denom"/> Same Denominator?</label>
+                    <label><input type="radio" name="size" value="0" /> Add Fractions</label>
+                    <br>
+                    <label><input type="radio" name="size" value="1" /> Subtract Fractions</label>
+                    <br>
+                    <label><input type="radio" name="size" value="2" /> Multiply Fractions</label>
+                    <br>
+                    <label><input type="radio" name="size" value="3" /> Divide Fractions</label>
                     <p>
-                </div>
-                <center><button id="select-mode">Go!</button></center>
+                        <div id="options" style="display: none;">
+                            Options:
+                            <br>
+                            <label><input id="mixed-fractions" type="checkbox" name="mixed-fractions" /> Mixed
+                                Fractions?</label>
+                            <br>
+                            <label id="same-denom"><input type="checkbox" name="same-denom" /> Same Denominator?</label>
+                            <p>
+                        </div>
+                        <center><button id="select-mode">Go!</button></center>
             </div>
         </div>
         <div id="application">
             <p>
-            <span id="the-instructions">Enter the simplified version of this fraction in the box on the right.</span>
-            <p>
-            <div id="general-div">    
-                <div class="wrap-div" style="display: inline-block;">
-                    <div class="fraction-maker-no-buttons fraction-input-width mixed-part" id="first-mixed-part">
-                        <div class="fraction-part-container-no-buttons fraction-input-width">
-                            <input readonly autocomplete="off" pattern="[0-9]{1,5}" type="text" value="1" class="fraction-part fraction-part-readonly fraction-numerator"/>
-                        </div>
-                    </div>
-                    <div class="fraction-maker-no-buttons fraction-input-width" id="first-fraction">
-                        <div class="fraction-part-container-no-buttons fraction-input-width">
-                            <input readonly autocomplete="off" pattern="[0-9]{1,5}" type="text" value="1" class="fraction-part fraction-part-readonly fraction-numerator"/>
-                        </div>
-                        <br>
-                        <div class="fraction-input-width fraction-line"></div>
-                        <br>
-                        <div class="fraction-part-container-no-buttons fraction-input-width">
-                            <input readonly autocomplete="off" pattern="[0-9]{1,5}" type="text" value="2" class="fraction-part fraction-part-readonly fraction-denominator"/>
-                        </div>
-                    </div>
-                    <div id="aux-parts" style="display: inline-block;">
-                        <span class="operation-sign" id="operation">&times;</span>
-                        <div class="fraction-maker-no-buttons fraction-input-width mixed-part" id="first-aux-mixed-part">
-                            <div class="fraction-part-container-no-buttons fraction-input-width">
-                                <input readonly autocomplete="off" pattern="[0-9]{1,5}" type="text" value="1" class="fraction-part fraction-part-readonly fraction-numerator"/>
+                <span id="the-instructions">Enter the simplified version of this fraction in the box on the
+                    right.</span>
+                <p>
+                    <div id="general-div">
+                        <div class="wrap-div" style="display: inline-block;">
+                            <div class="fraction-maker-no-buttons fraction-input-width mixed-part"
+                                id="first-mixed-part">
+                                <div class="fraction-part-container-no-buttons fraction-input-width">
+                                    <input readonly autocomplete="off" pattern="[0-9]{1,5}" type="text" value="1"
+                                        class="fraction-part fraction-part-readonly fraction-numerator" />
+                                </div>
+                            </div>
+                            <div class="fraction-maker-no-buttons fraction-input-width" id="first-fraction">
+                                <div class="fraction-part-container-no-buttons fraction-input-width">
+                                    <input readonly autocomplete="off" pattern="[0-9]{1,5}" type="text" value="1"
+                                        class="fraction-part fraction-part-readonly fraction-numerator" />
+                                </div>
+                                <br>
+                                <div class="fraction-input-width fraction-line"></div>
+                                <br>
+                                <div class="fraction-part-container-no-buttons fraction-input-width">
+                                    <input readonly autocomplete="off" pattern="[0-9]{1,5}" type="text" value="2"
+                                        class="fraction-part fraction-part-readonly fraction-denominator" />
+                                </div>
+                            </div>
+                            <div id="aux-parts" style="display: inline-block;">
+                                <span class="operation-sign" id="operation">&times;</span>
+                                <div class="fraction-maker-no-buttons fraction-input-width mixed-part"
+                                    id="first-aux-mixed-part">
+                                    <div class="fraction-part-container-no-buttons fraction-input-width">
+                                        <input readonly autocomplete="off" pattern="[0-9]{1,5}" type="text" value="1"
+                                            class="fraction-part fraction-part-readonly fraction-numerator" />
+                                    </div>
+                                </div>
+                                <div class="fraction-maker-no-buttons fraction-input-width" id="first-aux-fraction">
+                                    <div class="fraction-part-container-no-buttons fraction-input-width">
+                                        <input readonly autocomplete="off" pattern="[0-9]{1,5}" type="text" value="1"
+                                            class="fraction-part fraction-part-readonly fraction-numerator" />
+                                    </div>
+                                    <br>
+                                    <div class="fraction-input-width fraction-line"></div>
+                                    <br>
+                                    <div class="fraction-part-container-no-buttons fraction-input-width">
+                                        <input readonly autocomplete="off" pattern="[0-9]{1,5}" type="text" value="2"
+                                            class="fraction-part fraction-part-readonly fraction-denominator" />
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="fraction-maker-no-buttons fraction-input-width" id="first-aux-fraction">
+                        <div class="wrap-div" style="display: inline-block;">
+                            <span class="operation-sign">=</span>
+                            <div class="fraction-maker-no-buttons fraction-input-width mixed-part"
+                                id="second-mixed-part">
+                                <div class="fraction-part-container-no-buttons fraction-input-width">
+                                    <input autocomplete="off" pattern="[0-9]{1,5}" type="text" value="1"
+                                        class="fraction-part fraction-numerator" />
+                                </div>
+                            </div>
+
+                            <div class="fraction-maker-no-buttons fraction-input-width" id="second-fraction">
+                                <div class="fraction-part-container-no-buttons fraction-input-width">
+                                    <input autocomplete="off" pattern="[0-9]{1,5}" type="text" value="1"
+                                        class="fraction-part fraction-numerator" />
+                                </div>
+                                <br>
+                                <div class="fraction-input-width fraction-line"></div>
+                                <br>
+                                <div class="fraction-part-container-no-buttons fraction-input-width">
+                                    <input autocomplete="off" pattern="[0-9]{1,5}" type="text" value="2"
+                                        class="fraction-part fraction-denominator" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="order-div">
+                        <div class="fraction-maker-no-buttons fraction-input-width ordered-fraction">
+                            <select>
+                                <option value=""></option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                            </select>
                             <div class="fraction-part-container-no-buttons fraction-input-width">
-                                <input readonly autocomplete="off" pattern="[0-9]{1,5}" type="text" value="1" class="fraction-part fraction-part-readonly fraction-numerator"/>
+                                <input readonly autocomplete="off" pattern="[0-9]{1,5}" type="text" value="13"
+                                    class="fraction-part fraction-part-readonly fraction-numerator" />
                             </div>
                             <br>
                             <div class="fraction-input-width fraction-line"></div>
                             <br>
                             <div class="fraction-part-container-no-buttons fraction-input-width">
-                                <input readonly autocomplete="off" pattern="[0-9]{1,5}" type="text" value="2" class="fraction-part fraction-part-readonly fraction-denominator"/>
+                                <input readonly autocomplete="off" pattern="[0-9]{1,5}" type="text" value="2"
+                                    class="fraction-part fraction-part-readonly fraction-denominator" />
+                            </div>
+                        </div>
+                        <div class="fraction-maker-no-buttons fraction-input-width ordered-fraction">
+                            <select>
+                                <option value=""></option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                            </select>
+                            <div class="fraction-part-container-no-buttons fraction-input-width">
+                                <input readonly autocomplete="off" pattern="[0-9]{1,5}" type="text" value="1"
+                                    class="fraction-part fraction-part-readonly fraction-numerator" />
+                            </div>
+                            <br>
+                            <div class="fraction-input-width fraction-line"></div>
+                            <br>
+                            <div class="fraction-part-container-no-buttons fraction-input-width">
+                                <input readonly autocomplete="off" pattern="[0-9]{1,5}" type="text" value="2"
+                                    class="fraction-part fraction-part-readonly fraction-denominator" />
+                            </div>
+                        </div>
+                        <div class="fraction-maker-no-buttons fraction-input-width ordered-fraction">
+                            <select>
+                                <option value=""></option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                            </select>
+                            <div class="fraction-part-container-no-buttons fraction-input-width">
+                                <input readonly autocomplete="off" pattern="[0-9]{1,5}" type="text" value="1"
+                                    class="fraction-part fraction-part-readonly fraction-numerator" />
+                            </div>
+                            <br>
+                            <div class="fraction-input-width fraction-line"></div>
+                            <br>
+                            <div class="fraction-part-container-no-buttons fraction-input-width">
+                                <input readonly autocomplete="off" pattern="[0-9]{1,5}" type="text" value="2"
+                                    class="fraction-part fraction-part-readonly fraction-denominator" />
+                            </div>
+                        </div>
+                        <div class="fraction-maker-no-buttons fraction-input-width ordered-fraction">
+                            <select>
+                                <option value=""></option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                            </select>
+                            <div class="fraction-part-container-no-buttons fraction-input-width">
+                                <input readonly autocomplete="off" pattern="[0-9]{1,5}" type="text" value="1"
+                                    class="fraction-part fraction-part-readonly fraction-numerator" />
+                            </div>
+                            <br>
+                            <div class="fraction-input-width fraction-line"></div>
+                            <br>
+                            <div class="fraction-part-container-no-buttons fraction-input-width">
+                                <input readonly autocomplete="off" pattern="[0-9]{1,5}" type="text" value="2"
+                                    class="fraction-part fraction-part-readonly fraction-denominator" />
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="wrap-div" style="display: inline-block;">
-                    <span class="operation-sign">=</span>
-                    <div class="fraction-maker-no-buttons fraction-input-width mixed-part" id="second-mixed-part">
-                        <div class="fraction-part-container-no-buttons fraction-input-width">
-                            <input autocomplete="off" pattern="[0-9]{1,5}" type="text" value="1" class="fraction-part fraction-numerator"/>
-                        </div>
-                    </div>
+                    <p>
+                        <button class="my-button" id="check-button"><img src="Checkmark.svg" alt="" id="checkmark"
+                                class="button-image" /> Check</button>
+                        <button class="my-button" id="next-button"><img src="arrow_right.svg" alt=""
+                                id="right-arrow-image" class="button-image" /> Next</button>
+                        <p>
+                            <b><span id="num-correct-questions">0</span>/<span id="num-questions">0</span> correctly
+                                answered<span id="done">! Great job!</span></b>
+        </div>
+    </div>
+</body>
 
-                    <div class="fraction-maker-no-buttons fraction-input-width" id="second-fraction">
-                        <div class="fraction-part-container-no-buttons fraction-input-width">
-                            <input autocomplete="off" pattern="[0-9]{1,5}" type="text" value="1" class="fraction-part fraction-numerator"/>
-                        </div>
-                        <br>
-                        <div class="fraction-input-width fraction-line"></div>
-                        <br>
-                        <div class="fraction-part-container-no-buttons fraction-input-width">
-                            <input autocomplete="off" pattern="[0-9]{1,5}" type="text" value="2" class="fraction-part fraction-denominator"/>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div id="order-div">
-                <div class="fraction-maker-no-buttons fraction-input-width ordered-fraction">
-                        <select>
-                           <option value="1">1</option>
-                           <option value="2">2</option>
-                           <option value="3">3</option>
-                           <option value="4">4</option>
-                        </select> 
-                        <div class="fraction-part-container-no-buttons fraction-input-width">
-                            <input readonly autocomplete="off" pattern="[0-9]{1,5}" type="text" value="13" class="fraction-part fraction-part-readonly fraction-numerator"/>
-                        </div>
-                        <br>
-                        <div class="fraction-input-width fraction-line"></div>
-                        <br>
-                        <div class="fraction-part-container-no-buttons fraction-input-width">
-                            <input readonly autocomplete="off" pattern="[0-9]{1,5}" type="text" value="2" class="fraction-part fraction-part-readonly fraction-denominator"/>
-                        </div>
-                </div>
-                <div class="fraction-maker-no-buttons fraction-input-width ordered-fraction">
-                        <select>
-                           <option value="1">1</option>
-                           <option value="2">2</option>
-                           <option value="3">3</option>
-                           <option value="4">4</option>
-                        </select> 
-                        <div class="fraction-part-container-no-buttons fraction-input-width">
-                            <input readonly autocomplete="off" pattern="[0-9]{1,5}" type="text" value="1" class="fraction-part fraction-part-readonly fraction-numerator"/>
-                        </div>
-                        <br>
-                        <div class="fraction-input-width fraction-line"></div>
-                        <br>
-                        <div class="fraction-part-container-no-buttons fraction-input-width">
-                            <input readonly autocomplete="off" pattern="[0-9]{1,5}" type="text" value="2" class="fraction-part fraction-part-readonly fraction-denominator"/>
-                        </div>
-                </div>
-                <div class="fraction-maker-no-buttons fraction-input-width ordered-fraction">
-                        <select>
-                           <option value="1">1</option>
-                           <option value="2">2</option>
-                           <option value="3">3</option>
-                           <option value="4">4</option>
-                        </select> 
-                        <div class="fraction-part-container-no-buttons fraction-input-width">
-                            <input readonly autocomplete="off" pattern="[0-9]{1,5}" type="text" value="1" class="fraction-part fraction-part-readonly fraction-numerator"/>
-                        </div>
-                        <br>
-                        <div class="fraction-input-width fraction-line"></div>
-                        <br>
-                        <div class="fraction-part-container-no-buttons fraction-input-width">
-                            <input readonly autocomplete="off" pattern="[0-9]{1,5}" type="text" value="2" class="fraction-part fraction-part-readonly fraction-denominator"/>
-                        </div>
-                </div>
-                <div class="fraction-maker-no-buttons fraction-input-width ordered-fraction">
-                        <select>
-                           <option value="1">1</option>
-                           <option value="2">2</option>
-                           <option value="3">3</option>
-                           <option value="4">4</option>
-                        </select> 
-                        <div class="fraction-part-container-no-buttons fraction-input-width">
-                            <input readonly autocomplete="off" pattern="[0-9]{1,5}" type="text" value="1" class="fraction-part fraction-part-readonly fraction-numerator"/>
-                        </div>
-                        <br>
-                        <div class="fraction-input-width fraction-line"></div>
-                        <br>
-                        <div class="fraction-part-container-no-buttons fraction-input-width">
-                            <input readonly autocomplete="off" pattern="[0-9]{1,5}" type="text" value="2" class="fraction-part fraction-part-readonly fraction-denominator"/>
-                        </div>
-                </div>
-            </div>
-            <p>
-            <button class="my-button" id="check-button"><img src="Checkmark.svg" alt="" id="checkmark" class="button-image"/> Check</button>
-            <button class="my-button" id="next-button"><img src="arrow_right.svg" alt="" id="right-arrow-image" class="button-image"/> Next</button>
-            <p>
-                <b><span id="num-correct-questions">0</span>/<span id="num-questions">0</span> correctly answered<span id="done">! Great job!</span></b>
-        </div>
-        </div>
-    </body>
 </html>
