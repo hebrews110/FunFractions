@@ -181,7 +181,7 @@ function updateFractions() {
             secondFraction[0] = getRandomInt(1, secondFraction[1] - 1);
         }
         if(isMixedMode && mathOperation !== MATH_DIVIDE)
-            secondFraction[2] = getRandomInt(0, 4);
+            secondFraction[2] = getRandomInt(0, firstFraction[2]);
         else
             secondFraction[2] = 0;
         if(secondFraction[2] === 0)
@@ -424,7 +424,9 @@ $(window).load(function() {
             console.log("Correct d: " + correctDenominator + " input: " + d);
             console.log("Correct m: " + correctMixedVal + " input: " + m);
             
-            if(n === correctNumerator && d === correctDenominator && m === correctMixedVal)
+            if(d != 0 && (n/d) == 0 && expectedResult == 0) /* allow anything on the bottom */
+                isCorrect = true;
+            else if(n === correctNumerator && d === correctDenominator && m === correctMixedVal)
                 isCorrect = true;
         } else {
             var reduced = reduce(firstFraction[0], firstFraction[1]);
@@ -460,6 +462,10 @@ $(window).load(function() {
             $("#second-fraction").fractionReadOnly(true);
             if(mathOperation !== MATH_ORDER) {
                 $n.add($d).add($m).css({ color: 'red' });
+                if(sameDenominators && expectedResult == 0) {
+                    /* Coerce the "correct" denominator to be the one for the fractions */
+                    correctDenominator = firstFraction[1];
+                }
                 $n.val(correctNumerator);
                 $d.val(correctDenominator);
                 $m.val(correctMixedVal);
