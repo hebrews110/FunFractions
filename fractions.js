@@ -174,11 +174,11 @@ function updateFractions() {
         else
             secondFraction[1] = getRandomNonPrime(3, 16);
         if(mathOperation === MATH_MINUS) {
-            secondFraction[0] = getRandomInt(1, firstFraction[0]);
+            secondFraction[0] = getRandomInt(1, firstFraction[0] - 1);
         } else if(sameDenominators)
             secondFraction[0] = getRandomInt(1, firstFraction[1] - firstFraction[0]);
         else {
-            secondFraction[0] = getRandomInt(1, secondFraction[1] - 1);
+            secondFraction[0] = getRandomInt(1, secondFraction[0] - 1);
         }
         if(isMixedMode && mathOperation !== MATH_DIVIDE)
             secondFraction[2] = getRandomInt(0, firstFraction[2]);
