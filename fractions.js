@@ -125,98 +125,129 @@ function valExists(val, maxIndex) {
     return false;
 }
 var tries = 0;
+
+var previousQuestions = [];
+
 function updateFractions() {
     tries = 0;
+    var generationTries = 0;
+    
     if(isMixedMode)
         $(".mixed-part").show();
     else
         $(".mixed-part").hide();
+    var foundQuestion = false;
+    while(generationTries++ <= 10) {
+        foundQuestion = false;
+        orderFractions = [
+            [ 0, 0 ],
+            [ 0, 0 ],
+            [ 0, 0 ],
+            [ 0, 0 ]
+        ];
     
-    orderFractions = [
-        [ 0, 0 ],
-        [ 0, 0 ],
-        [ 0, 0 ],
-        [ 0, 0 ]
-    ];
-
-    orderFractionVals = [ undefined, undefined, undefined, undefined ];
-
-    if(mathOperation === MATH_ORDER) {
-        for(var i = 0; i < 4; i++) {
-            var $frac = $($("#order-div").children()[i]);
-            do {
-                orderFractions[i][1] = getRandomInt(2, 6);
-                orderFractions[i][0] = getRandomInt(1, orderFractions[i][1] - 1);
-                orderFractionVals[i] = orderFractions[i][0] / orderFractions[i][1];
-            } while(valExists(orderFractionVals[i], i-1));
-            $frac.fractionNumerator().val(orderFractions[i][0]);
-            $frac.fractionDenominator().val(orderFractions[i][1]);
-            $frac.find("select").prop("disabled", false).prop("selected", false).val("");
+        orderFractionVals = [ undefined, undefined, undefined, undefined ];
+    
+        if(mathOperation === MATH_ORDER) {
+            for(var i = 0; i < 4; i++) {
+                var $frac = $($("#order-div").children()[i]);
+                do {
+                    orderFractions[i][1] = getRandomInt(2, 6);
+                    orderFractions[i][0] = getRandomInt(1, orderFractions[i][1] - 1);
+                    orderFractionVals[i] = orderFractions[i][0] / orderFractions[i][1];
+                } while(valExists(orderFractionVals[i], i-1));
+                $frac.fractionNumerator().val(orderFractions[i][0]);
+                $frac.fractionDenominator().val(orderFractions[i][1]);
+                $frac.find("select").prop("disabled", false).prop("selected", false).val("");
+                
+            }
+            orderFractionVals.sort();
+            console.log(orderFractionVals);
             
         }
-        orderFractionVals.sort();
-        console.log(orderFractionVals);
-        
-    }
-    else if(mathOperation !== MATH_REDUCE) {
-        firstFraction[1] = getRandomNonPrime(3, 16);
-        firstFraction[0] = getRandomInt(1, firstFraction[1] - 1);
-        if(isMixedMode && mathOperation !== MATH_DIVIDE)
-            firstFraction[2] = getRandomInt(0, 4);
-        else
-            firstFraction[2] = 0;
-        if(firstFraction[2] === 0)
-            $("#first-mixed-part").hide();
-        $("#aux-parts").show();
-        $("#operation").html(operationHtml[mathOperation]);
-        if(sameDenominators)
-            secondFraction[1] = firstFraction[1];
-        else
-            secondFraction[1] = getRandomNonPrime(3, 16);
-        if(mathOperation === MATH_MINUS) {
-            secondFraction[0] = getRandomInt(1, firstFraction[0] - 1);
-        } else if(sameDenominators)
-            secondFraction[0] = getRandomInt(1, firstFraction[1] - firstFraction[0]);
-        else {
-            secondFraction[0] = getRandomInt(1, secondFraction[0] - 1);
+        else if(mathOperation !== MATH_REDUCE) {
+            var getInt = (mathOperation == MATH_TIMES || mathOperation == MATH_DIVIDE) ? getRandomNonPrime : getRandomInt;
+            firstFraction[1] = getInt(3, 7);
+            firstFraction[0] = getRandomInt(1, firstFraction[1] - 1);
+            if(isMixedMode && mathOperation !== MATH_DIVIDE)
+                firstFraction[2] = getRandomInt(0, 4);
+            else
+                firstFraction[2] = 0;
+            if(firstFraction[2] === 0)
+                $("#first-mixed-part").hide();
+            $("#aux-parts").show();
+            $("#operation").html(operationHtml[mathOperation]);
+            if(sameDenominators)
+                secondFraction[1] = firstFraction[1];
+            else
+                secondFraction[1] = getInt(firstFraction[1], 7);
+            if(mathOperation === MATH_MINUS) {
+                secondFraction[0] = getRandomInt(1, firstFraction[0] - 1);
+            } else if(sameDenominators)
+                secondFraction[0] = getRandomInt(1, firstFraction[1] - firstFraction[0]);
+            else {
+                secondFraction[0] = getRandomInt(1, secondFraction[1]);
+            }
+            if(isMixedMode && mathOperation !== MATH_DIVIDE)
+                secondFraction[2] = getRandomInt(0, firstFraction[2]);
+            else
+                secondFraction[2] = 0;
+            if(secondFraction[2] === 0)
+                $("#first-aux-mixed-part").hide();
+            $("#first-aux-mixed-part").fractionNumerator().val(secondFraction[2]);
+            $("#first-aux-fraction").fractionNumerator().val(secondFraction[0]);
+            $("#first-aux-fraction").fractionDenominator().val(secondFraction[1]);
+            
+        } else {
+            $("#aux-parts").hide();
+            firstFraction[1] = getRandomInt(1, 6);
+            firstFraction[0] = getRandomInt(1, firstFraction[1] - 1);
+            
+            var scalar = getRandomInt(2, 6);
+            firstFraction[0] *= scalar;
+            firstFraction[1] *= scalar;
         }
-        if(isMixedMode && mathOperation !== MATH_DIVIDE)
-            secondFraction[2] = getRandomInt(0, firstFraction[2]);
-        else
-            secondFraction[2] = 0;
-        if(secondFraction[2] === 0)
-            $("#first-aux-mixed-part").hide();
-        $("#first-aux-mixed-part").fractionNumerator().val(secondFraction[2]);
-        $("#first-aux-fraction").fractionNumerator().val(secondFraction[0]);
-        $("#first-aux-fraction").fractionDenominator().val(secondFraction[1]);
+       
         
-    } else {
-        $("#aux-parts").hide();
-        firstFraction[1] = getRandomInt(1, 6);
-        firstFraction[0] = getRandomInt(1, firstFraction[1] - 1);
-        
-        var scalar = getRandomInt(2, 6);
-        firstFraction[0] *= scalar;
-        firstFraction[1] *= scalar;
-    }
-   
+        if(mathOperation !== MATH_ORDER) {
+            $("#second-fraction").fractionReadOnly(false);
     
-    if(mathOperation !== MATH_ORDER) {
-        $("#second-fraction").fractionReadOnly(false);
-
-        $("#first-fraction").fractionNumerator().val(firstFraction[0]);
-        $("#first-fraction").fractionDenominator().val(firstFraction[1]);
+            $("#first-fraction").fractionNumerator().val(firstFraction[0]);
+            $("#first-fraction").fractionDenominator().val(firstFraction[1]);
+            
+            $("#first-mixed-part").fractionNumerator().css({ color: '' });
+            $("#first-mixed-part").fractionNumerator().val(firstFraction[2]);
+            
+            $("#second-mixed-part").fractionNumerator().css({ color: '' });
+            $("#second-mixed-part").fractionNumerator().val("");
+            $("#second-fraction").fractionNumerator().css({ color: '' });
+            $("#second-fraction").fractionNumerator().val("");
+            $("#second-fraction").fractionDenominator().css({ color: '' });
+            $("#second-fraction").fractionDenominator().val("");
+        }
+        function arraysEqual(a, b) {
+            if (a.length != b.length) return false;
+          
+            for (var i = 0; i < a.length; ++i) {
+              if (a[i] != b[i]) return false;
+            }
+            return true;
+        }
         
-        $("#first-mixed-part").fractionNumerator().css({ color: '' });
-        $("#first-mixed-part").fractionNumerator().val(firstFraction[2]);
-        
-        $("#second-mixed-part").fractionNumerator().css({ color: '' });
-        $("#second-mixed-part").fractionNumerator().val("");
-        $("#second-fraction").fractionNumerator().css({ color: '' });
-        $("#second-fraction").fractionNumerator().val("");
-        $("#second-fraction").fractionDenominator().css({ color: '' });
-        $("#second-fraction").fractionDenominator().val("");
+        for(var i = 0; i < previousQuestions.length; i++) {
+            if(arraysEqual(previousQuestions[i].firstFraction, firstFraction) && arraysEqual(previousQuestions[i].secondFraction, secondFraction)) {
+                foundQuestion = true;
+                console.log(firstFraction, secondFraction, "FOUND IN INDEX", i, previousQuestions[i].firstFraction, previousQuestions[i].secondFraction);
+                break;
+            }
+        }
+        if(!foundQuestion) {
+            break;
+        }
     }
+    if(!foundQuestion)
+        previousQuestions.push({ firstFraction: firstFraction.slice(), secondFraction: secondFraction.slice() });
+    console.log("Took", generationTries, "tries to genereate this question");
     $("#the-instructions").css({ color: '' });
     $("#the-instructions").text(operationInstructions[mathOperation+2]);
 }
