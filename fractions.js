@@ -112,8 +112,7 @@ function getRandomNonPrime(min, max) {
 }
 
 function fractionVal(array) {
-    console.log(array[0]);
-    console.log(array[1]);
+    console.log(array[2] + " " + array[0] + " / " + array[1]);
     return (array[0] / array[1]) + array[2];
 }
 
@@ -173,8 +172,12 @@ function updateFractions() {
                 firstFraction[2] = getRandomInt(0, 4);
             else
                 firstFraction[2] = 0;
+            /*
             if(firstFraction[2] === 0)
                 $("#first-mixed-part").hide();
+            else
+                $("#first-mixed-part").show();
+            */
             $("#aux-parts").show();
             $("#operation").html(operationHtml[mathOperation]);
             if(sameDenominators)
@@ -192,8 +195,15 @@ function updateFractions() {
                 secondFraction[2] = getRandomInt(0, firstFraction[2]);
             else
                 secondFraction[2] = 0;
+
+            /* override here for testing */
+            /* end override */
+            /*
             if(secondFraction[2] === 0)
                 $("#first-aux-mixed-part").hide();
+            else
+                $("#first-aux-mixed-part").show();
+            */
             $("#first-aux-mixed-part").fractionNumerator().val(secondFraction[2]);
             $("#first-aux-fraction").fractionNumerator().val(secondFraction[0]);
             $("#first-aux-fraction").fractionDenominator().val(secondFraction[1]);
@@ -207,9 +217,12 @@ function updateFractions() {
             firstFraction[0] *= scalar;
             firstFraction[1] *= scalar;
         }
+
+        
        
         
         if(mathOperation !== MATH_ORDER) {
+            console.log("flush to dom");
             $("#second-fraction").fractionReadOnly(false);
     
             $("#first-fraction").fractionNumerator().val(firstFraction[0]);
@@ -241,6 +254,7 @@ function updateFractions() {
                 break;
             }
         }
+
         if(!foundQuestion) {
             break;
         }
@@ -248,6 +262,7 @@ function updateFractions() {
     if(!foundQuestion)
         previousQuestions.push({ firstFraction: firstFraction.slice(), secondFraction: secondFraction.slice() });
     console.log("Took", generationTries, "tries to genereate this question");
+    console.log(firstFraction, secondFraction);
     $("#the-instructions").css({ color: '' });
     $("#the-instructions").text(operationInstructions[mathOperation+2]);
 }
